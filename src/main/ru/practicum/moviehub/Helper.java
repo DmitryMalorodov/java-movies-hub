@@ -11,7 +11,7 @@ public class Helper {
     private static final Gson gson = new Gson();
     private static final Random random = new Random();
 
-    private Helper(){
+    private Helper() {
     }
 
     public static <T> T jsonToClass(String json, Class<T> tClass) {
