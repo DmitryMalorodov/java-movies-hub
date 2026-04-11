@@ -8,6 +8,7 @@ import ru.practicum.moviehub.store.MoviesStore;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.Map;
 
 public class MoviesServer {
     private final HttpServer server;
@@ -39,5 +40,21 @@ public class MoviesServer {
 
     public static Movie addMovie(String title, Integer year) {
         return moviesStore.addMovie(new Movie(title, year));
+    }
+
+    public static Movie getMovie(Long movieId) {
+        return moviesStore.getMovie(movieId);
+    }
+
+    public static Movie deleteMovie(Long movieId) {
+        return moviesStore.deleteMovie(movieId);
+    }
+
+    public static List<Movie> getMoviesByYear(Integer year) {
+        return moviesStore.getMoviesByYear(year);
+    }
+
+    public static Map<Long, Movie> getMovies() {
+        return moviesStore.getMovies();
     }
 }

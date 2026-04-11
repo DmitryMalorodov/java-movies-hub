@@ -1,16 +1,18 @@
-package ru.practicum.moviehub.http;
+package ru.practicum.moviehub.http.movies;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.practicum.moviehub.Helper;
 import ru.practicum.moviehub.api.ErrorResponse;
+import ru.practicum.moviehub.http.MoviesApiTest;
 import ru.practicum.moviehub.model.Movie;
 
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.practicum.moviehub.enums.Endpoint.MOVIES;
 import static ru.practicum.moviehub.http.helpers.GeneralAssertions.isEqualTo;
 
 public class AddMovieTests extends MoviesApiTest {
@@ -111,10 +113,28 @@ public class AddMovieTests extends MoviesApiTest {
                 "Ожидаемое описание проблемы '%s' не соответствует фактическому '%s'");
     }
 
+    @Test
+    void addMovieWithInvalidJson() throws Exception {
+        Movie movie = new Movie("Фильм", 2000);
+
+        String invalidJson = Helper.toJson(movie) + "}}";
+
+        // Отправка запроса
+        HttpResponse<String> resp = client.send(
+                makePostRequest(
+                        MOVIES.getEndpoint(),
+                        invalidJson,
+                        EXP_CONTENT_TYPE),
+                responseBodyHandler);
+
+        // Проверка кода ответа и заголовка Content-Type
+        checkStatusCodeAndContentType(400, resp);
+    }
+
     private HttpResponse<String> sendRequest(Movie movie, String contentType) throws Exception {
         return client.send(
                 makePostRequest(
-                        "/movies",
+                        MOVIES.getEndpoint(),
                         Helper.toJson(movie),
                         contentType),
                 responseBodyHandler);

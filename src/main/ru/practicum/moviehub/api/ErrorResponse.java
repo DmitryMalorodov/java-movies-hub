@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ErrorResponse {
-    private String error;
-    private List<String> details;
+    private final String error;
+    private final List<String> details;
 
     public ErrorResponse(String error) {
         this.error = error;
