@@ -2,6 +2,7 @@ package ru.practicum.moviehub.http;
 
 import com.sun.net.httpserver.HttpServer;
 import ru.practicum.moviehub.http.handlers.MoviesHandler;
+import ru.practicum.moviehub.http.handlers.MoviesIdHandler;
 import ru.practicum.moviehub.model.Movie;
 import ru.practicum.moviehub.store.MoviesStore;
 
@@ -19,6 +20,7 @@ public class MoviesServer {
         try {
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/movies", new MoviesHandler());
+            server.createContext("/movies/", new MoviesIdHandler());
         } catch (IOException e) {
             throw new RuntimeException("Не удалось создать HTTP-сервер", e);
         }

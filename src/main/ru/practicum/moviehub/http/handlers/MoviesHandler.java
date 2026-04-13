@@ -31,7 +31,6 @@ public class MoviesHandler extends BaseHttpHandler {
         switch (ex.getRequestMethod()) {
             case "GET" -> useGetMethod(ex, pathWithQuery);
             case "POST" -> usePostMethod(ex);
-            case "DELETE" -> useDeleteMethod(ex, pathWithQuery);
             default -> sendNoContent(ex, 405);
         }
     }
@@ -39,19 +38,6 @@ public class MoviesHandler extends BaseHttpHandler {
     private void useGetMethod(HttpExchange ex, String path) throws IOException {
         if (path.equals(MOVIES.getEndpoint())) {
             sendJson(ex, 200, toJson(MoviesServer.getMovies().values()));
-        } else if (path.contains(MOVIES.getEndpoint() + "/")) {
-            String movieId = path.substring((MOVIES.getEndpoint() + "/").length());
-            if (!Helper.isNumber(movieId)) {
-                sendJson(ex, 400, toJson(new ErrorResponse("Некорректный ID")));
-                return;
-            }
-
-            Movie movie = MoviesServer.getMovie(Long.valueOf(movieId));
-            if (movie != null) {
-                sendJson(ex, 200, toJson(movie));
-            } else {
-                sendJson(ex, 404, toJson(new ErrorResponse("Фильм не найден")));
-            }
         } else if (path.contains(MOVIES.getEndpoint() + "?year=")) {
             String yearQueryValue = path.substring((MOVIES.getEndpoint() + "?year=").length());
             if (!Helper.isNumber(yearQueryValue)) {
@@ -83,20 +69,6 @@ public class MoviesHandler extends BaseHttpHandler {
             sendJson(ex, 201, toJson(addedMovie));
         } catch (JsonSyntaxException e) {
             sendJson(ex, 400, toJson(new ErrorResponse("Невалидный json в теле запроса")));
-        }
-    }
-
-    private void useDeleteMethod(HttpExchange ex, String path) throws IOException {
-        String movieId = path.substring((MOVIES.getEndpoint() + "/").length());
-        if (!Helper.isNumber(movieId)) {
-            sendNoContent(ex, 400);
-            return;
-        }
-
-        if (MoviesServer.deleteMovie(Long.valueOf(movieId)) != null) {
-            sendNoContent(ex, 204);
-        } else {
-            sendNoContent(ex, 404);
         }
     }
 
