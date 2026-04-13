@@ -5,9 +5,11 @@ import ru.practicum.moviehub.model.Movie;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MoviesStore {
     private static Map<Long, Movie> movies;
+    private final AtomicLong count = new AtomicLong(0);
 
     public MoviesStore() {
         movies = new HashMap<>();
@@ -22,7 +24,9 @@ public class MoviesStore {
     }
 
     public Movie addMovie(Movie movie) {
-        movies.put(movie.getId(), movie);
+        long movieId = count.incrementAndGet();
+        movie.setId(movieId);
+        movies.put(movieId, movie);
         return movie;
     }
 

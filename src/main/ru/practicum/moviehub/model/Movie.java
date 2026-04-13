@@ -1,15 +1,11 @@
 package ru.practicum.moviehub.model;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 public class Movie {
     private long id;
     private String title;
     private Integer year;
-    private static final AtomicLong count = new AtomicLong(0);
 
     public Movie(String title, Integer year) {
-        this.id = count.incrementAndGet();
         this.title = title;
         this.year = year;
     }
@@ -24,6 +20,10 @@ public class Movie {
 
     public Integer getYear() {
         return year;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
